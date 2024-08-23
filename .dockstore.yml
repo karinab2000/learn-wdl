@@ -1,5 +1,5 @@
 version: 1.2
 workflows:
-- name: wdl-zarr-file
+- name: vcf-to-zarr-trial
   subclass: wdl
-  primaryDescriptorPath: /wdl-zarr-file.wdl
+  primaryDescriptorPath: /vcf-to-zarr-trial.wdl
