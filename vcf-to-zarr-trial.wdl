@@ -36,7 +36,7 @@ task IndexFilteredVCF {
         File filtered_vcf
     }
 
-    Int disk_size = 1 + 5*ceil(size([vcf_file, indexed_vcf], "GB"))
+    Int disk_size = 1 + 5*ceil(size([filtered_vcf], "GB"))
 
     command {
         bcftools index -t ${filtered_vcf}
@@ -64,7 +64,7 @@ task ConvertToZarr {
         String chrom
     }
 
-    Int disk_size = 1 + 5*ceil(size([vcf_file, indexed_vcf], "GB"))
+    Int disk_size = 1 + 5*ceil(size([filtered_vcf], "GB"))
 
     command <<<
         python3 <<CODE
@@ -103,10 +103,8 @@ workflow ConvertVCFtoZarr {
     call FilterVCF { input: vcf_file = vcf_file, chrom = chrom, basename = basename, indexed_vcf = indexed_vcf }
     call IndexFilteredVCF { input: filtered_vcf = FilterVCF.filtered_vcf }
     call ConvertToZarr { input: filtered_vcf = FilterVCF.filtered_vcf, basename = basename, chrom = chrom }
-}
 
-output {
-    File zarr = ConvertToZarr.zarr_output
+    output {
+        File zarr = ConvertToZarr.zarr_output
+    }
 }
-
-# Add output for Zarr files 
