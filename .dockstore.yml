@@ -1,5 +1,5 @@
 version: 1.2
 workflows:
-- name: hello-world
+- name: wdl-zarr-file
   subclass: wdl
-  primaryDescriptorPath: /hello-docker.wdl
+  primaryDescriptorPath: /wdl-zarr-file.wdl
