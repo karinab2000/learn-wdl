@@ -23,7 +23,7 @@ task FilterVCF {
         cpu:                    2
         memory:                 8 + " GiB"
         disks: "local-disk " +  disk_size + " SSD" 
-        bootDiskSi`zeGb:        10
+        bootDiskSizeGb:        10
         preemptible:            0
         maxRetries:             0
         docker:                 "us.gcr.io/broad-dsp-lrma/lr-basic:0.1.1"
@@ -50,7 +50,7 @@ task IndexFilteredVCF {
         cpu:                    2
         memory:                 8 + " GiB"
         disks: "local-disk " +  disk_size + " SSD" 
-        bootDiskSi`zeGb:        10
+        bootDiskSizeGb:        10
         preemptible:            0
         maxRetries:             0
         docker:                 "us.gcr.io/broad-dsp-lrma/lr-basic:0.1.1"
@@ -85,7 +85,7 @@ CODE
         cpu:                    2
         memory:                 8 + " GiB"
         disks: "local-disk " +  disk_size + " SSD" 
-        bootDiskSi`zeGb:        10
+        bootDiskSizeGb:        10
         preemptible:            0
         maxRetries:             0
         docker:                 "mcfonsecalab/variantutils:0.8"
