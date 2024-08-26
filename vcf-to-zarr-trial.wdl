@@ -67,6 +67,9 @@ task ConvertToZarr {
     Int disk_size = 1 + 5*ceil(size([filtered_vcf], "GB"))
 
     command <<<
+    echo 'initializing vcf_to_zarr'
+    echo ${filtered_vcf}
+    echo ${basename}.${chrom}.zarr
         python3 <<CODE
 import allel
 
@@ -75,7 +78,8 @@ allel.vcf_to_zarr('${filtered_vcf}',
                   fields='*', 
                   overwrite=False)
 CODE
-           tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
+
+        tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
     >>>
     
     output {
