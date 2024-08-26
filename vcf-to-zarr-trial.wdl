@@ -11,6 +11,11 @@ task FilterVCF {
     Int disk_size = 1 + 5*ceil(size([vcf_file, indexed_vcf], "GB"))
 
     command {
+        echo 'FilterVCF'
+        echo $vcf_file
+        echo ${chrom}
+        echo ${basename}
+        echo ${indexed_vcf}
         bcftools view -r ${chrom} ${vcf_file} | \
         bcftools filter -e 'TYPE="indel"' -Oz -o ${basename}.${chrom}.vcf.gz
     }
@@ -65,23 +70,29 @@ task ConvertToZarr {
     }
 
     Int disk_size = 1 + 5*ceil(size([filtered_vcf], "GB"))
-
-    command <<<
-    echo 'initializing vcf_to_zarr'
-    echo ${filtered_vcf}
-    echo ${basename}.${chrom}.zarr
-        python3 <<CODE
-import allel
-
-allel.vcf_to_zarr('~{filtered_vcf}', 
-                  '~{basename}.~{chrom}.zarr', 
-                  fields='*', 
-                  overwrite=False)
-CODE
-
-        tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
-    >>>
     
+    command {
+        echo 'initializing vcf_to_zarr'
+        echo ${filtered_vcf}
+        echo ${basename}.${chrom}.zarr
+    }
+
+       # command <<<
+  #  echo 'initializing vcf_to_zarr'
+   # echo ${filtered_vcf}
+   # echo ${basename}.${chrom}.zarr
+      #  python3 <<CODE
+#import allel
+
+#allel.vcf_to_zarr('~{filtered_vcf}', 
+                 # '~{basename}.~{chrom}.zarr', 
+                 # fields='*', 
+                 # overwrite=False)
+#CODE
+
+        #tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
+   # >>>
+
     output {
         File zarr_tar = "${basename}.${chrom}.zarr.tar.gz"
     }
