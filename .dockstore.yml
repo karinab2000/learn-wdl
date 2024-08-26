@@ -2,4 +2,4 @@ version: 1.2
 workflows:
 - name: vcf-to-zarr-trial-subset
   subclass: wdl
-  primaryDescriptorPath: /vcf-to-zarr-trial_subset.wdl
+  primaryDescriptorPath: /vcf-to-zarr-trial-subset.wdl
