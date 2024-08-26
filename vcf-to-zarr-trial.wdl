@@ -73,8 +73,8 @@ task ConvertToZarr {
         python3 <<CODE
 import allel
 
-allel.vcf_to_zarr('${filtered_vcf}', 
-                  '${basename}.${chrom}.zarr', 
+allel.vcf_to_zarr('~{filtered_vcf}', 
+                  '~{basename}.~{chrom}.zarr', 
                   fields='*', 
                   overwrite=False)
 CODE
