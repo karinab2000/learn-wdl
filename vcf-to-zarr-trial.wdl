@@ -75,10 +75,11 @@ allel.vcf_to_zarr('${filtered_vcf}',
                   fields='*', 
                   overwrite=False)
 CODE
+           tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
     >>>
     
     output {
-        File zarr_output = "${basename}.${chrom}.zarr"
+        File zarr_tar = "${basename}.${chrom}.zarr.tar.gz"
     }
 
     runtime {
@@ -105,6 +106,6 @@ workflow ConvertVCFtoZarr {
     call ConvertToZarr { input: filtered_vcf = FilterVCF.filtered_vcf, basename = basename, chrom = chrom }
 
     output {
-        File zarr = ConvertToZarr.zarr_output
+        File zarr_tar = ConvertToZarr.zarr_tar
     }
 }
