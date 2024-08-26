@@ -100,7 +100,7 @@ CODE
         bootDiskSizeGb:        10
         preemptible:            0
         maxRetries:             0
-        docker:                 "mcfonsecalab/variantutils:0.8"
+        docker:                 "karinab2000/allelimage:latest"
     }
 }
 
