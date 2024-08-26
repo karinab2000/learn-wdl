@@ -78,8 +78,8 @@ task ConvertToZarr {
     echo ${basename}.${chrom}.zarr
         python3 <<CODE
 import allel
-input_file_py = f'~{filtered_vcf}'
-zarr_output = f'~{basename}.~{chrom}.zarr'
+input_file_py = '~{filtered_vcf}'
+zarr_output = '~{basename}.~{chrom}.zarr'
 print('test', input_file_py, zarr_output)
 allel.vcf_to_zarr(input_file_py, 
                   zarr_output, 
