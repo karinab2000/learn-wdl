@@ -16,6 +16,7 @@ task ConvertToZarr {
         
         python3 <<CODE
         import allel
+        import zarr, numcodecs
         #import os
 
 
@@ -29,12 +30,12 @@ task ConvertToZarr {
                         overwrite=False)
         CODE
 
-        #tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
+        tar czf ${basename}.${chrom}.zarr.tar.gz ${basename}.${chrom}.zarr
     >>>
 
     output {
         String zarr_tar = 'test'
-        #File zarr_tar = "~{basename}.~{chrom}.zarr.tar.gz"
+        File zarr_tar = "~{basename}.~{chrom}.zarr.tar.gz"
     }
 
     runtime {
