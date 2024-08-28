@@ -64,40 +64,33 @@ task IndexFilteredVCF {
 task ConvertToZarr {
     input {
         File filtered_vcf
-        String basename
-        String chrom
+        String prefix = "out"
+       # String basename
+        #String chrom
     }
 
-    Int disk_size = 1 + 5*ceil(size([filtered_vcf], "GB"))
+    Int disk_size = 1 + 5*ceil(size(filtered_vcf, "GB"))
 
     command <<<
-        echo 'initializing vcf_to_zarr'
-        echo "~{filtered_vcf}"
-        echo "~{basename}.~{chrom}.zarr"
-        python3 <<CODE
+        python3 <<EOF
         import allel
         import zarr
-        import os
 
-        input_file_py = "~{filtered_vcf}"
-        output_dir = os.path.dirname(input_file_py)
-        zarr_output = os.path.join(output_dir, "~{basename}.~{chrom}.zarr")
+        vcfs = "~{filtered_vcf}"
+        target = "~{prefix}.zarr"
 
-        allel.vcf_to_zarr(input_file_py, 
-                        zarr_output, 
-                        fields="*", 
-                        overwrite=False)
+        allel.vcf_to_zarr(vcfs, target)
 
-        CODE
+        EOF
     >>>
 
     output {
-        File zarr_file = "${basename}.${chrom}.zarr"
+        File zarr_file = "~{prefix}.zarr"
     }
 
     runtime {
         cpu: 2
-        memory: "16 GiB"
+        memory: "8 GiB"
         disks: "local-disk " + disk_size + " SSD" 
         bootDiskSizeGb: 10
         preemptible: 0
@@ -108,15 +101,21 @@ task ConvertToZarr {
 
 workflow ConvertVCFtoZarr {
     input {
-        File vcf_file
-        String basename
-        File indexed_vcf
-        String chrom
+       # File vcf_file
+      #  String basename
+     #   File indexed_vcf
+       # String chrom
+        File filtered_vcf
     }
 
-    call FilterVCF { input: vcf_file = vcf_file, chrom = chrom, basename = basename, indexed_vcf = indexed_vcf }
-    call IndexFilteredVCF { input: filtered_vcf = FilterVCF.filtered_vcf }
-    call ConvertToZarr { input: filtered_vcf = FilterVCF.filtered_vcf, basename = basename, chrom = chrom }
+    #call FilterVCF { 
+       # input: vcf_file = vcf_file, chrom = chrom, basename = basename, indexed_vcf = indexed_vcf 
+       # }
+   # call IndexFilteredVCF { 
+       #input: filtered_vcf = FilterVCF.filtered_vcf }
+    #call ConvertToZarr { input: filtered_vcf = FilterVCF.filtered_vcf, basename = basename, chrom = chrom }
+   # call ConvertToZarr { input: filtered_vcf = filtered_vcf, basename = basename, chrom = chrom }
+   call ConvertToZarr { input: filtered_vcf = filtered_vcf }
 
     output {
         File zarr_file = ConvertToZarr.zarr_file
