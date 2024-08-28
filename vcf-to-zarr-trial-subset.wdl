@@ -82,10 +82,15 @@ task ConvertToZarr {
         allel.vcf_to_zarr(vcfs, target)
 
         EOF
+
+        echo "Done converting to zarr."
+
+        echo "Tarring output..."
+        tar -cf ~{prefix}.zarr.tar ~{prefix}.zarr
     >>>
 
     output {
-        File zarr_file = "~{prefix}.zarr"
+        File zarr_file = "~{prefix}.zarr.tar"
     }
 
     runtime {
