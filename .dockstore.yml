@@ -3,3 +3,6 @@ workflows:
 - name: vcf-to-zarr-trial-subset
   subclass: wdl
   primaryDescriptorPath: /vcf-to-zarr-trial-subset.wdl
+- name: vcf-to-zarr-trial3
+  subclass: wdl
+  primaryDescriptorPath: /vcf-to-zarr-trial3.wdl
