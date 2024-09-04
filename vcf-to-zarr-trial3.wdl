@@ -80,7 +80,7 @@ task ConvertToZarr {
 
         vcfs = "~{filtered_vcf}"
         target = "~{prefix}.zarr"
-        allel.vcf_to_zarr(vcfs, target)
+        allel.vcf_to_zarr(vcfs, target, fields = "*")
         EOF
         echo "Done converting to zarr."
         echo "Tarring output..."
