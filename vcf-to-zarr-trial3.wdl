@@ -106,7 +106,7 @@ workflow ConvertVCFtoZarr {
         String basename
         File indexed_vcf
         String chrom
-        File filtered_vcf
+       # File filtered_vcf
     }
 
     call FilterVCF { 
