@@ -74,10 +74,9 @@ task ConvertToZarr {
         python3 <<EOF
         import allel
         import zarr
-
         vcfs = "~{filtered_vcf}"
         target = "~{basename}.~{chrom}.zarr"
-        allel.vcf_to_zarr(vcfs, target, alt_number = 50, numbers = {'ANN': 150})
+        allel.vcf_to_zarr(vcfs, target, fields = ['variants/CHROM', 'variants/POS', 'variants/numalt', 'calldata/AF'], alt_number = 100)
         EOF
         echo "Done converting to zarr."
         echo "Tarring output..."
