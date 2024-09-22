@@ -96,6 +96,7 @@ workflow ConvertVCFtoZarr {
        File input_file
        File pos_mask_dict
        File sample_mask_dict
+        String interest
     }
 
    call FilterFile { input: input_file = input_file, pos_mask_dict = pos_mask_dict, sample_mask_dict = sample_mask_dict, interest = "interest" } # You might want to provide interest dynamically
