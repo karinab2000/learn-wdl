@@ -7,5 +7,5 @@ workflows:
   subclass: wdl
   primaryDescriptorPath: /vcf-to-zarr-trial3.wdl
 - name: 1000-3000-comparison
-subclass: wdl
-primaryDescriptorPath: /1000-3000-comparison.wdl
+  subclass: wdl
+  primaryDescriptorPath: /1000-3000-comparison.wdl
