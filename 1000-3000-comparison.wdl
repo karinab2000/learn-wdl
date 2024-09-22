@@ -17,12 +17,12 @@ task FilterFile {
         import h5py
         import json
 
-        read_file = h5py.File("${input_file}", 'r')
+        read_file = h5py.File("~{input_file}", 'r')
 
-        with open("${pos_mask_dict}", 'r') as f:
+        with open("~{pos_mask_dict}", 'r') as f:
             pos_mask_dict = json.load(f)
 
-        with open("${sample_mask_dict}", 'r') as f:
+        with open("~{sample_mask_dict}", 'r') as f:
             sample_mask_dict = json.load(f)
 
         final_data_sets = {}
@@ -62,7 +62,7 @@ task FilterFile {
             subset_final['position'] = subset_original['position']
             final_data_sets[comparison_of_interest] = subset_final
         
-        make_datasets(read_file, "${interest}")
+        make_datasets(read_file, "~{interest}")
 
         class NumpyEncoder(json.JSONEncoder):
             def default(self, obj):
@@ -70,8 +70,8 @@ task FilterFile {
                     return obj.tolist()
                 return json.JSONEncoder.default(self, obj)
                 
-        with open(f"{interest}.json", "w") as outfile:
-            json.dump(final_data_sets["${interest}"], outfile, cls=NumpyEncoder)
+        with open("~{interest}.json", "w") as outfile:
+            json.dump(final_data_sets["~{interest}"], outfile, cls=NumpyEncoder)
 
         EOF
     >>>
@@ -91,12 +91,12 @@ task FilterFile {
     }
 }
 
-workflow ConvertVCFtoZarr {
+workflow SubsetData {
     input {
        File input_file
        File pos_mask_dict
        File sample_mask_dict
-        String interest
+       String interest
     }
 
    call FilterFile { input: input_file = input_file, pos_mask_dict = pos_mask_dict, sample_mask_dict = sample_mask_dict, interest = "interest" } # You might want to provide interest dynamically
