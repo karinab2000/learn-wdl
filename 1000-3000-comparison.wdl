@@ -102,6 +102,6 @@ workflow SubsetData {
    call FilterFile { input: input_file = input_file, pos_mask_dict = pos_mask_dict, sample_mask_dict = sample_mask_dict, interest = "interest" } # You might want to provide interest dynamically
 
     output {
-        File zarr_file = FilterFile.new_file
+        File new_file = FilterFile.new_file
     }
 }
