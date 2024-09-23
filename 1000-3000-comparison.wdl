@@ -17,11 +17,15 @@ task FilterFile {
         import h5py
         import json
 
+        print('read in input file')
+
         read_file = h5py.File("~{input_file}", 'r')
 
+        print('read in pos file')
         with open("~{pos_mask_dict}", 'r') as f:
             pos_mask_dict = json.load(f)
 
+        print('read in sample file')
         with open("~{sample_mask_dict}", 'r') as f:
             sample_mask_dict = json.load(f)
 
@@ -52,6 +56,8 @@ task FilterFile {
                 subset_original["ab"].append(ab_pos_filter.T[~subset_pos_mask])
                 gen_pos_filter = genotypes[~sample_mask]
                 subset_original["genotypes"].append(gen_pos_filter.T[~subset_pos_mask])
+
+                print(chromosome)
             
             subset_final = {"genotypes": [], "ad": [], "ab": [], 'position': []}
             original_samples = np.asarray([x.decode('UTF-8') for x in dataset["samples"][::]])
@@ -69,6 +75,7 @@ task FilterFile {
                 if isinstance(obj, np.ndarray):
                     return obj.tolist()
                 return json.JSONEncoder.default(self, obj)
+        print('dumping')
                 
         with open("~{interest}.json", "w") as outfile:
             json.dump(final_data_sets["~{interest}"], outfile, cls=NumpyEncoder)
@@ -82,7 +89,7 @@ task FilterFile {
     
     runtime {
         cpu: 2
-        memory: "64 GiB"
+        memory: "128 GiB"
         disks: "local-disk " + disk_size + " SSD"
         bootDiskSizeGb: 50
         preemptible: 0
