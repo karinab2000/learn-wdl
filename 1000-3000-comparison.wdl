@@ -99,7 +99,7 @@ workflow SubsetData {
        String interest
     }
 
-   call FilterFile { input: input_file = input_file, pos_mask_dict = pos_mask_dict, sample_mask_dict = sample_mask_dict, interest = "interest" } # You might want to provide interest dynamically
+   call FilterFile { input: input_file = input_file, pos_mask_dict = pos_mask_dict, sample_mask_dict = sample_mask_dict, interest = interest } # You might want to provide interest dynamically
 
     output {
         File new_file = FilterFile.new_file
