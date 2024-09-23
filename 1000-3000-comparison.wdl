@@ -82,9 +82,9 @@ task FilterFile {
     
     runtime {
         cpu: 2
-        memory: "32 GiB"
+        memory: "64 GiB"
         disks: "local-disk " + disk_size + " SSD"
-        bootDiskSizeGb: 10
+        bootDiskSizeGb: 50
         preemptible: 0
         maxRetries: 0
         docker: "karinab2000/1000-3000-comparison:latest"
