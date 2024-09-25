@@ -1,38 +1,45 @@
+version 1.0
+
 task Createh5 {
     input {
         Array[File] standard3000_files
     }
 
-    Int disk_size = 1 + 5*ceil(size(standard3000_files, "GB"))
+    Int disk_size = 1 + 5 * ceil(size(standard3000_files, "GB"))
 
     command <<<
 
         python3 <<EOF
         import numpy as np
         import h5py
+        import os
 
-        files = ~{sep=' ' standard3000_files}
+        file_paths = ~{sep=' ' standard3000_files}
         combined_file = 'combined_14_files.h5'
 
         combined_samples = []  # To store samples from all files
+        other_keys_data = {}  # To temporarily store other keys' data
 
-        for file in files.split():
-            with h5py.File(file, 'r') as f:
+        for file_path in file_paths.split():
+            file_name = os.path.basename(file_path)
+            with h5py.File(file_name, 'r') as f:
                 for key in f.keys():
                     if key == 'samples':
                         # Concatenate 'samples' datasets
                         samples = f['samples'][:]
                         combined_samples.append(samples)
                     else:
-                        # Copy other keys to the combined file
-                        if key not in combined_h5:
-                            f.copy(key, combined_h5, name=key)
+                        # Store the first occurrence of each key's data
+                        if key not in other_keys_data:
+                            other_keys_data[key] = f[key][:]
 
         # Combine all 'samples' from the files
         combined_samples = np.concatenate(combined_samples, axis=0)
 
         with h5py.File(combined_file, 'w') as combined_h5:
             combined_h5.create_dataset('samples', data=combined_samples)
+            for key, data in other_keys_data.items():
+                combined_h5.create_dataset(key, data=data)
 
         EOF
     >>>
@@ -40,7 +47,7 @@ task Createh5 {
     output {
         File standard3000 = "combined_14_files.h5"
     }
-    
+
     runtime {
         cpu: 2
         memory: "128 GiB"
@@ -57,10 +64,8 @@ workflow CompileData {
         Array[File] standard3000_files
     }
 
-    call Createh5 {
-        input: 
-            standard3000_files = standard3000_files,
-            standard3000 = standard3000
+    call Createh5 { input: 
+            standard3000_files = standard3000_files
     }
 
     output {
