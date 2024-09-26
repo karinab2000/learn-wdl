@@ -12,8 +12,8 @@ task Createh5 {
         python3 <<EOF
         import numpy as np
         import h5py
-        import os
 
+        # Array of file paths
         file_paths = ~{sep=' ' standard3000_files}
         combined_file = 'combined_14_files.h5'
 
@@ -21,8 +21,7 @@ task Createh5 {
         other_keys_data = {}  # To temporarily store other keys' data
 
         for file_path in file_paths.split():
-            file_name = os.path.basename(file_path)
-            with h5py.File(file_name, 'r') as f:
+            with h5py.File(file_path, 'r') as f:
                 for key in f.keys():
                     if key == 'samples':
                         # Concatenate 'samples' datasets
