@@ -12,3 +12,6 @@ workflows:
 - name: compile-standard3000
   subclass: wdl
   primaryDescriptorPath: /compile-standard3000.wdl
+- name: 1000-3000-comparison-standard
+  subclass: wdl
+  primaryDescriptorPath: /1000-3000-comparison-standard.wdl
