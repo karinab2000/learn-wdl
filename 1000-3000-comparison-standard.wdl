@@ -8,11 +8,11 @@ task FilterFile {
         String interest
     }
 
-    Int disk_size = Int disk_size = 1 + 5 * ceil(
+    Int disk_size = 1 + 5 * ceil(
     size(standard3000_files, "GB") + 
     size(pos_mask_dict, "GB") + 
     size(sample_mask_dict, "GB")
-)
+    )
 
     command <<<
 
