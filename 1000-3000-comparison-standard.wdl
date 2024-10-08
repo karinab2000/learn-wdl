@@ -2,26 +2,13 @@ version 1.0
 
 task FilterFile {
     input {
-        File standard3000_1
-       File standard3000_2
-       File standard3000_3
-       File standard3000_4
-       File standard3000_5
-       File standard3000_6
-       File standard3000_7
-       File standard3000_8
-       File standard3000_9
-       File standard3000_10
-       File standard3000_11
-       File standard3000_12
-       File standard3000_13
-       File standard3000_14
+        Array[File] standard3000_files
         File pos_mask_dict
         File sample_mask_dict
         String interest
     }
 
-    Int disk_size = 1 + 5*ceil(size([standard3000_1, standard3000_2, standard3000_3, standard3000_4, standard3000_5, standard3000_6, standard3000_7, standard3000_8, standard3000_9, standard3000_10, standard3000_11, standard3000_12, standard3000_13, standard3000_14, pos_mask_dict, sample_mask_dict], "GB"))
+    Int disk_size = 1 + 5*ceil(size([standard3000_files, pos_mask_dict, sample_mask_dict], "GB"))
 
     command <<<
 
@@ -34,14 +21,10 @@ task FilterFile {
         sample_mask_dict_path = "~{sample_mask_dict}"
         interest = "~{interest}"
 
-        standard3000_files = [
-            "~{standard3000_1}", "~{standard3000_2}", "~{standard3000_3}", 
-            "~{standard3000_4}", "~{standard3000_5}", "~{standard3000_6}", 
-            "~{standard3000_7}", "~{standard3000_8}", "~{standard3000_9}", 
-            "~{standard3000_10}", "~{standard3000_11}", "~{standard3000_12}", 
-            "~{standard3000_13}", "~{standard3000_14}"
+        standard3000_file_path = [
+            "~{sep='", "' standard3000_files}"
         ]
-        
+
         with open(pos_mask_dict_path, 'r') as f:
             pos_mask_dict = json.load(f)
 
@@ -52,7 +35,7 @@ task FilterFile {
         def make_datasets(comparison_of_interest):
             subset_original = {"genotypes": [], "ad": [], "ab": [], "position": []}
             start_idx = 0
-            for chromosome, file_path in enumerate(standard3000_files, 1):
+            for chromosome, file_path in enumerate(standard3000_file_path, start = 1):
                 dataset = h5py.File(file_path, 'r')
                 array_length = len(dataset['POS_' + str(chromosome)][::])
                 end_idx = start_idx + array_length
@@ -116,20 +99,7 @@ task FilterFile {
 
 workflow SubsetData {
     input {
-        File standard3000_1
-       File standard3000_2
-       File standard3000_3
-       File standard3000_4
-       File standard3000_5
-       File standard3000_6
-       File standard3000_7
-       File standard3000_8
-       File standard3000_9
-       File standard3000_10
-       File standard3000_11
-       File standard3000_12
-       File standard3000_13
-       File standard3000_14
+       Array[File] standard3000_files
        File pos_mask_dict
        File sample_mask_dict
        String interest
@@ -137,20 +107,7 @@ workflow SubsetData {
 
    call FilterFile {
        input:
-           standard3000_1 = standard3000_1,
-            standard3000_2 = standard3000_2,
-            standard3000_3 = standard3000_3,
-            standard3000_4 = standard3000_4,
-            standard3000_5 = standard3000_5,
-            standard3000_6 = standard3000_6,
-            standard3000_7 = standard3000_7,
-            standard3000_8 = standard3000_8,
-            standard3000_9 = standard3000_9,
-            standard3000_10 = standard3000_10,
-            standard3000_11 = standard3000_11,
-            standard3000_12 = standard3000_12,
-            standard3000_13 = standard3000_13,
-            standard3000_14 = standard3000_14,
+           standard3000_files = standard3000_files,
            pos_mask_dict = pos_mask_dict,
            sample_mask_dict = sample_mask_dict,
            interest = interest
@@ -160,4 +117,3 @@ workflow SubsetData {
         File new_file = FilterFile.new_file
     }
 }
-
